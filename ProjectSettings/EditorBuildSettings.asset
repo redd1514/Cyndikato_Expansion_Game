@@ -18,6 +18,18 @@ EditorBuildSettings:
     path: Assets/Scenes/MenuScene.unity
     guid: 71541974e29e7704b8c6ed9dd8b5f833
   - enabled: 1
+    path: Assets/Scenes/RouletteIntroScene.unity
+    guid: fca4d92bf021e8847b3f414392848466
+  - enabled: 1
+    path: Assets/Scenes/RouletteCurtainScene.unity
+    guid: 0416fb8fea3c3dc4e952b2960f5d9d28
+  - enabled: 1
+    path: Assets/Scenes/RouletteWheelScene.unity
+    guid: aed75b11cfc22ad4ea9804385d162b37
+  - enabled: 1
+    path: Assets/Scenes/RouletteResultScene.unity
+    guid: 24bff7df51fcca349b0fd8da85f77b9a
+  - enabled: 1
     path: Assets/Scenes/PlayerSetupScene.unity
     guid: 4f19412202ebcfc47a38f1cf0b2a922a
   - enabled: 1
@@ -26,6 +38,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Function4Scene.unity
     guid: 69e0425530089164bb87456c3f56ddba
+  - enabled: 1
+    path: Assets/Scenes/JudgementChallengeScene.unity
+    guid: 3f7725427cc6f0a4e838dc0503675369
+  - enabled: 1
+    path: Assets/Scenes/JudgementGameScene.unity
+    guid: ccb9d6a34c2c8bb41b742fbd30c01e8a
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

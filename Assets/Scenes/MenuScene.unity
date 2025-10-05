@@ -750,8 +750,8 @@ MonoBehaviour:
   settingsButton: {fileID: 1820369316}
   functionSceneNames:
   - Function1Scene
-  - Function2Scene
-  - Function3Scene
+  - JudgementChallengeScene
+  - RouletteIntroScene
   - PlayerSetupScene
   - Function5Scene
   - Function6Scene

@@ -61,7 +61,7 @@ public class MainMenuManager : MonoBehaviour
 
         // For now, just show which function was clicked
         // Later you can load specific scenes:
-        // SceneManager.LoadScene(functionSceneNames[functionIndex]);
+        SceneManager.LoadScene(functionSceneNames[functionIndex]);
     }
 
     public void OnSettingsClicked()

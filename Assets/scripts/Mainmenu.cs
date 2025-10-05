@@ -11,8 +11,8 @@ public class Menu : MonoBehaviour
     public Button[] functionButtons = new Button[6];
     public string[] functionNames = {
         "Function 1",
-        "Function 2",
-        "Function 3",
+        "Judgement Challenge",
+        "Roulette Spin",
         "Score Dashboard",
         "Function 5",
         "Function 6"
@@ -24,8 +24,8 @@ public class Menu : MonoBehaviour
     [Header("Scene Names (Optional - for future)")]
     public string[] functionSceneNames = {
         "Function1Scene",
-        "Function2Scene",
-        "Function3Scene",
+        "JudgementChallengeScene",
+        "RouletteIntroScene",
         "PlayerSetupScene",
         "Function5Scene",
         "Function6Scene"
