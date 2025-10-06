@@ -154,11 +154,12 @@ MonoBehaviour:
   proveButton: {fileID: 1597484255}
   failButton: {fileID: 0}
   evidenceContainer: {fileID: 1324782459}
-  gameTime: 30
+  gameTime: 15
   evidenceItemPrefab: {fileID: 1741509990531073771, guid: 43262ef891d25fb4baef8534b04c3370, type: 3}
   evidenceSprites: []
   spawnAreaMin: {x: -400, y: -200}
   spawnAreaMax: {x: 400, y: 200}
+  minItemDistance: 150
   evidencePairs:
   - id1: 2
     id2: 2
@@ -327,7 +328,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 00:30
+  m_text: 00:15
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5bc08c0ade4c25a46b40bab542f61d82, type: 2}
   m_sharedMaterial: {fileID: 8791396208819375834, guid: 5bc08c0ade4c25a46b40bab542f61d82, type: 2}
@@ -360,7 +361,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -440,8 +441,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 252}
-  m_SizeDelta: {x: 1146.1538, y: 50}
+  m_AnchoredPosition: {x: 0, y: 226.14838}
+  m_SizeDelta: {x: 1308.9233, y: 101.7032}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &575781159
 MonoBehaviour:
@@ -496,9 +497,9 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_fontStyle: 1
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -559,7 +560,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &742764300
 RectTransform:
   m_ObjectHideFlags: 0
@@ -578,8 +579,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 25.841919, y: 8.076172}
-  m_SizeDelta: {x: -290.4961, y: -316.3119}
+  m_AnchoredPosition: {x: -16.2867, y: -64.6913}
+  m_SizeDelta: {x: -914.7656, y: -480.9962}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &742764301
 MonoBehaviour:
@@ -594,7 +595,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 0.16929531, g: 0, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -863,8 +864,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 11.2357, y: 31.2104}
-  m_SizeDelta: {x: 1276.0044, y: 407.1094}
+  m_AnchoredPosition: {x: 28.4699, y: 11.2716}
+  m_SizeDelta: {x: 1544.095, y: 547.2387}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1514952904
 GameObject:
@@ -978,7 +979,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -225}
+  m_AnchoredPosition: {x: 0, y: -112}
   m_SizeDelta: {x: 630.601, y: 104.9214}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1597484253
@@ -994,7 +995,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.061501026, b: 1, a: 1}
+  m_Color: {r: 0.09166145, g: 1, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1097,8 +1098,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 15}
-  m_SizeDelta: {x: 766.5941, y: 89.8021}
+  m_AnchoredPosition: {x: 0, y: 72.951}
+  m_SizeDelta: {x: 766.5941, y: 145.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1683647915
 CanvasRenderer:
@@ -1137,8 +1138,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278241023
-  m_fontColor: {r: 1, g: 0.77551246, b: 0, a: 1}
+    rgba: 4278242046
+  m_fontColor: {r: 0.9960785, g: 0.79215693, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1265,8 +1266,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278238207
-  m_fontColor: {r: 1, g: 0.7317194, b: 0, a: 1}
+    rgba: 4278242046
+  m_fontColor: {r: 0.9960785, g: 0.79215693, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

@@ -1,7 +1,8 @@
-using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class DynamicScoreDashboard : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class DynamicScoreDashboard : MonoBehaviour
     public GameObject playerRowPrefab;
     public TextMeshProUGUI justiceTotal;
     public TextMeshProUGUI corruptTotal;
+    public Button mainMenuButton;
 
     [Header("Character Data")]
     public CharacterData[] allCharacters;
@@ -25,8 +27,32 @@ public class DynamicScoreDashboard : MonoBehaviour
         LoadPlayerAssignments();
         GeneratePlayerRows();
         UpdateTotals();
+        SetupMainMenuButton();
+    }
+    void SetupMainMenuButton()
+    {
+        if (mainMenuButton != null)
+        {
+            mainMenuButton.onClick.AddListener(ReturnToMainMenu);
+            Debug.Log("Dashboard: Main menu button setup complete");
+        }
+        else
+        {
+            Debug.LogWarning("Dashboard: Main menu button not assigned in inspector!");
+        }
     }
 
+   
+    public void ReturnToMainMenu()
+    {
+        Debug.Log("Dashboard: Returning to main menu...");
+
+        // Optional: Clear any saved game data if needed
+        // PlayerPrefs.DeleteAll(); // Uncomment if you want to clear all data
+
+        // Load the main menu scene
+        SceneManager.LoadScene("MenuScene"); 
+    }
     void LoadPlayerCount()
     {
         numberOfPlayers = PlayerPrefs.GetInt("PlayerCount", 4);

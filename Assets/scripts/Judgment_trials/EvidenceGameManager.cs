@@ -18,9 +18,10 @@ public class EvidenceGameManager : MonoBehaviour
     [Header("Game Settings")]
     public float gameTime = 30f;
     public GameObject evidenceItemPrefab;
-    public Sprite[] evidenceSprites; // Assign in inspector
-    public Vector2 spawnAreaMin = new Vector2(-400, -200);
-    public Vector2 spawnAreaMax = new Vector2(400, 200);
+    public Sprite[] evidenceSprites;
+    public Vector2 spawnAreaMin = new Vector2(-600, -300); 
+    public Vector2 spawnAreaMax = new Vector2(600, 300);  
+    public float minItemDistance = 150f; 
 
     [Header("Evidence Pairs")]
     public EvidencePair[] evidencePairs;
@@ -63,20 +64,35 @@ public class EvidenceGameManager : MonoBehaviour
     void SpawnEvidenceItems()
     {
         List<Vector2> usedPositions = new List<Vector2>();
+        int totalItems = evidencePairs.Length * 2; 
+
+      
+        float spawnAreaWidth = spawnAreaMax.x - spawnAreaMin.x;
+        float spawnAreaHeight = spawnAreaMax.y - spawnAreaMin.y;
+        float totalSpawnArea = spawnAreaWidth * spawnAreaHeight;
+        float requiredArea = totalItems * (minItemDistance * minItemDistance);
+
+        if (requiredArea > totalSpawnArea * 0.8f) 
+        {
+            Debug.LogWarning($"Spawn area might be too small! Consider increasing spawn area or reducing minItemDistance.");
+            Debug.LogWarning($"Required area: {requiredArea}, Available area: {totalSpawnArea}");
+        }
 
         foreach (EvidencePair pair in evidencePairs)
         {
-            // Spawn first item of pair
             SpawnEvidenceItem(pair.id1, pair.id2, pair.sprite1, usedPositions);
-            // Spawn second item of pair
             SpawnEvidenceItem(pair.id2, pair.id1, pair.sprite2, usedPositions);
         }
+
+        Debug.Log($"Spawned {evidenceItems.Count} evidence items with {usedPositions.Count} positions");
     }
 
     void SpawnEvidenceItem(int id, int matchingId, Sprite sprite, List<Vector2> usedPositions)
     {
         Vector2 spawnPosition;
         int attempts = 0;
+        int maxAttempts = 200; 
+        bool positionFound = false;
 
         do
         {
@@ -85,8 +101,21 @@ public class EvidenceGameManager : MonoBehaviour
                 Random.Range(spawnAreaMin.y, spawnAreaMax.y)
             );
             attempts++;
+
+            if (!IsPositionTooClose(spawnPosition, usedPositions))
+            {
+                positionFound = true;
+                break;
+            }
         }
-        while (IsPositionTooClose(spawnPosition, usedPositions) && attempts < 50);
+        while (attempts < maxAttempts);
+
+        
+        if (!positionFound)
+        {
+            Debug.LogWarning($"Could not find random position after {maxAttempts} attempts. Using grid fallback.");
+            spawnPosition = GetGridPosition(usedPositions.Count);
+        }
 
         usedPositions.Add(spawnPosition);
 
@@ -99,15 +128,35 @@ public class EvidenceGameManager : MonoBehaviour
         evidenceItem.evidenceSprite = sprite;
 
         evidenceItems.Add(evidenceItem);
+
+        Debug.Log($"Spawned item {id} at position {spawnPosition} (attempt #{attempts})");
+    }
+
+   
+    Vector2 GetGridPosition(int index)
+    {
+        int columns = Mathf.CeilToInt(Mathf.Sqrt(evidencePairs.Length * 2));
+        int row = index / columns;
+        int col = index % columns;
+
+        float cellWidth = (spawnAreaMax.x - spawnAreaMin.x) / columns;
+        float cellHeight = (spawnAreaMax.y - spawnAreaMin.y) / Mathf.CeilToInt((float)(evidencePairs.Length * 2) / columns);
+
+        float x = spawnAreaMin.x + (col + 0.5f) * cellWidth;
+        float y = spawnAreaMin.y + (row + 0.5f) * cellHeight;
+
+      
+        x += Random.Range(-cellWidth * 0.2f, cellWidth * 0.2f);
+        y += Random.Range(-cellHeight * 0.2f, cellHeight * 0.2f);
+
+        return new Vector2(x, y);
     }
 
     bool IsPositionTooClose(Vector2 newPos, List<Vector2> existingPositions)
     {
-        float minDistance = 300f; // Minimum distance between items
-
         foreach (Vector2 pos in existingPositions)
         {
-            if (Vector2.Distance(newPos, pos) < minDistance)
+            if (Vector2.Distance(newPos, pos) < minItemDistance)
                 return true;
         }
         return false;
@@ -119,19 +168,16 @@ public class EvidenceGameManager : MonoBehaviour
 
         if (selectedEvidence == null)
         {
-            // First selection
             selectedEvidence = evidence;
             evidence.SetSelected(true);
         }
         else if (selectedEvidence == evidence)
         {
-            // Deselect same item
             selectedEvidence.SetSelected(false);
             selectedEvidence = null;
         }
         else
         {
-            // Second selection - check for match
             CheckMatch(selectedEvidence, evidence);
         }
     }
@@ -140,14 +186,12 @@ public class EvidenceGameManager : MonoBehaviour
     {
         if (item1.GetMatchingID() == item2.GetEvidenceID())
         {
-            
             item1.SetMatched(true);
             item2.SetMatched(true);
             item1.SetSelected(false);
 
             matchedPairs++;
 
-            
             if (matchedPairs >= totalPairs)
             {
                 WinGame();
@@ -155,7 +199,6 @@ public class EvidenceGameManager : MonoBehaviour
         }
         else
         {
-            
             item1.SetSelected(false);
         }
 
@@ -204,11 +247,11 @@ public class EvidenceGameManager : MonoBehaviour
     void SetupButtons()
     {
         proveButton.onClick.AddListener(() => {
-            SceneManager.LoadScene("MenuScene"); 
+            SceneManager.LoadScene("MenuScene");
         });
 
         failButton.onClick.AddListener(() => {
-            SceneManager.LoadScene("MenuScene"); 
+            SceneManager.LoadScene("MenuScene");
         });
     }
 

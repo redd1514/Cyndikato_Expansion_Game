@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 using System.Collections.Generic;
+using System.Linq;
 
 public class CharacterAssignmentManager : MonoBehaviour
 {
@@ -17,6 +18,10 @@ public class CharacterAssignmentManager : MonoBehaviour
 
     [Header("Assignment Data")]
     public List<PlayerAssignment> playerAssignments = new List<PlayerAssignment>();
+
+    [Header("Visual Feedback")]
+    public Color assignedCharacterColor = Color.gray; // Color for already assigned characters
+    public Color availableCharacterColor = Color.white; // Color for available characters
 
     private int numberOfPlayers;
 
@@ -53,7 +58,10 @@ public class CharacterAssignmentManager : MonoBehaviour
 
         // Setup confirm button
         if (confirmButton != null)
+        {
             confirmButton.onClick.AddListener(ConfirmAssignments);
+            UpdateConfirmButtonState();
+        }
     }
 
     void CreatePlayerAssignmentRow(int playerIndex)
@@ -67,16 +75,52 @@ public class CharacterAssignmentManager : MonoBehaviour
             return;
         }
 
+        // Find the first available character for this player
+        CharacterData initialCharacter = GetFirstAvailableCharacter();
+
         PlayerAssignment assignment = new PlayerAssignment
         {
             playerIndex = playerIndex,
             playerName = $"Player {playerIndex + 1}",
-            assignedCharacter = availableCharacters[playerIndex % availableCharacters.Length], // Cycle through characters
+            assignedCharacter = initialCharacter,
             assignmentRowObject = assignmentRow
         };
 
         playerAssignments.Add(assignment);
         SetupAssignmentRowUI(assignmentRow, assignment);
+    }
+
+    CharacterData GetFirstAvailableCharacter()
+    {
+        // Get list of already assigned characters
+        List<CharacterData> assignedCharacters = playerAssignments
+            .Where(p => p.assignedCharacter != null)
+            .Select(p => p.assignedCharacter)
+            .ToList();
+
+        // Find first character not in assigned list
+        foreach (CharacterData character in availableCharacters)
+        {
+            if (!assignedCharacters.Contains(character))
+            {
+                return character;
+            }
+        }
+
+        // If all characters are assigned, return null (this should be handled)
+        return null;
+    }
+
+    List<CharacterData> GetAvailableCharacters(PlayerAssignment excludeAssignment = null)
+    {
+        // Get list of already assigned characters (excluding the current player's assignment)
+        List<CharacterData> assignedCharacters = playerAssignments
+            .Where(p => p.assignedCharacter != null && p != excludeAssignment)
+            .Select(p => p.assignedCharacter)
+            .ToList();
+
+        // Return characters not in assigned list
+        return availableCharacters.Where(c => !assignedCharacters.Contains(c)).ToList();
     }
 
     void SetupAssignmentRowUI(GameObject row, PlayerAssignment assignment)
@@ -142,10 +186,23 @@ public class CharacterAssignmentManager : MonoBehaviour
 
     void UpdateCharacterDisplay(PlayerAssignment assignment, Image avatar, TextMeshProUGUI nameText)
     {
-        if (assignment.assignedCharacter == null) return;
+        if (assignment.assignedCharacter == null)
+        {
+            // No character assigned - show placeholder
+            if (avatar != null)
+                avatar.color = Color.red; // Visual indicator for missing assignment
+
+            if (nameText != null)
+                nameText.text = "No Character Available!";
+
+            return;
+        }
 
         if (avatar != null && assignment.assignedCharacter.characterAvatar != null)
+        {
             avatar.sprite = assignment.assignedCharacter.characterAvatar;
+            avatar.color = availableCharacterColor; // Reset to normal color
+        }
 
         if (nameText != null)
             nameText.text = assignment.assignedCharacter.characterName;
@@ -153,23 +210,76 @@ public class CharacterAssignmentManager : MonoBehaviour
 
     void CycleCharacter(PlayerAssignment assignment, Image avatar, TextMeshProUGUI nameText)
     {
-        // Find current character index
-        int currentIndex = System.Array.IndexOf(availableCharacters, assignment.assignedCharacter);
+        // Get available characters (excluding current player's assignment)
+        List<CharacterData> availableChars = GetAvailableCharacters(assignment);
 
-        // Move to next character (cycle back to 0 if at end)
-        int nextIndex = (currentIndex + 1) % availableCharacters.Length;
+        if (availableChars.Count == 0)
+        {
+            Debug.LogWarning($"No available characters for {assignment.playerName}");
+            return;
+        }
+
+        // Find current character index in available list
+        int currentIndex = -1;
+        if (assignment.assignedCharacter != null)
+        {
+            currentIndex = availableChars.IndexOf(assignment.assignedCharacter);
+        }
+
+        // Move to next available character
+        int nextIndex = (currentIndex + 1) % availableChars.Count;
 
         // Assign new character
-        assignment.assignedCharacter = availableCharacters[nextIndex];
+        assignment.assignedCharacter = availableChars[nextIndex];
 
         // Update display
         UpdateCharacterDisplay(assignment, avatar, nameText);
 
+        // Update confirm button state
+        UpdateConfirmButtonState();
+
         Debug.Log($"{assignment.playerName} assigned to {assignment.assignedCharacter.characterName}");
+    }
+
+    void UpdateConfirmButtonState()
+    {
+        if (confirmButton == null) return;
+
+        // Check if all players have unique character assignments
+        bool allAssigned = true;
+        HashSet<CharacterData> usedCharacters = new HashSet<CharacterData>();
+
+        foreach (PlayerAssignment assignment in playerAssignments)
+        {
+            if (assignment.assignedCharacter == null)
+            {
+                allAssigned = false;
+                break;
+            }
+
+            if (usedCharacters.Contains(assignment.assignedCharacter))
+            {
+                allAssigned = false; // Duplicate found
+                break;
+            }
+
+            usedCharacters.Add(assignment.assignedCharacter);
+        }
+
+        confirmButton.interactable = allAssigned;
+
+        
     }
 
     public void ConfirmAssignments()
     {
+        // Validate assignments before saving
+        if (!ValidateAssignments())
+        {
+            Debug.LogError("Cannot confirm assignments - validation failed!");
+            return;
+        }
+
         // Save character assignments to PlayerPrefs
         for (int i = 0; i < playerAssignments.Count; i++)
         {
@@ -196,6 +306,52 @@ public class CharacterAssignmentManager : MonoBehaviour
 
         // Load score dashboard
         SceneManager.LoadScene("Function4Scene");
+    }
+
+    bool ValidateAssignments()
+    {
+        HashSet<CharacterData> usedCharacters = new HashSet<CharacterData>();
+
+        foreach (PlayerAssignment assignment in playerAssignments)
+        {
+            if (assignment.assignedCharacter == null)
+            {
+                Debug.LogError($"Player {assignment.playerName} has no character assigned!");
+                return false;
+            }
+
+            if (usedCharacters.Contains(assignment.assignedCharacter))
+            {
+                Debug.LogError($"Character {assignment.assignedCharacter.characterName} is assigned to multiple players!");
+                return false;
+            }
+
+            usedCharacters.Add(assignment.assignedCharacter);
+        }
+
+        // Check if we have enough characters for all players
+        if (availableCharacters.Length < numberOfPlayers)
+        {
+            Debug.LogError($"Not enough characters ({availableCharacters.Length}) for all players ({numberOfPlayers})!");
+            return false;
+        }
+
+        return true;
+    }
+
+    // Public method to check if a character is already assigned
+    public bool IsCharacterAssigned(CharacterData character, PlayerAssignment excludePlayer = null)
+    {
+        return playerAssignments.Any(p => p.assignedCharacter == character && p != excludePlayer);
+    }
+
+    // Public method to get all assigned characters
+    public List<CharacterData> GetAssignedCharacters()
+    {
+        return playerAssignments
+            .Where(p => p.assignedCharacter != null)
+            .Select(p => p.assignedCharacter)
+            .ToList();
     }
 }
 
