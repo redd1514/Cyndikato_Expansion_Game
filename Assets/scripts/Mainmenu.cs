@@ -10,12 +10,12 @@ public class Menu : MonoBehaviour
     [Header("Function Buttons (6 Game Functions)")]
     public Button[] functionButtons = new Button[6];
     public string[] functionNames = {
-        "Function 1",
+        "Golder Wager",
         "Judgement Challenge",
         "Roulette Spin",
         "Score Dashboard",
-        "Function 5",
-        "Function 6"
+        "Council of Fates",
+        "Hidden Agenda"
     };
 
     [Header("Settings")]
@@ -23,12 +23,12 @@ public class Menu : MonoBehaviour
 
     [Header("Scene Names (Optional - for future)")]
     public string[] functionSceneNames = {
-        "Function1Scene",
+        "DieRolling",
         "JudgementChallengeScene",
         "RouletteIntroScene",
         "PlayerSetupScene",
-        "Function5Scene",
-        "Function6Scene"
+        "economy",
+        "HiddenAgenda"
     };
 
     void Start()
